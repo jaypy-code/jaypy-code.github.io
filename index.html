@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,88 +17,74 @@
             background-color: #253238;
             width: 100vw;
             height: 100vh;
+            overflow: hidden;
         }
         main{
-            position: fixed;
-            color: #ffffff;
-            background-color: #253238;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            min-width: 300px;
-            border-radius: 0.3rem;
-            z-index: 1;
-        }
-        main a{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
             color: #fff;
-            margin-right: 10px;
-            transition: all .2s;
         }
-        main a:hover,
-        main a:focus{
-            color: #E94036;
-            transition: all .2s;
+        img{
+            width: 150px;
+            height: 150px;
         }
-        main ~ div.background{
-            background-size: 10%;
+        ul{
+            display: flex;
+            flex-wrap: wrap;
         }
-        main:hover ~ div.background{
-            background-size: 12%;
+        ul li{
+            margin-right: 50px;
         }
-        div.background{
+        a{
+            color: #fff;
+        }
+        footer{
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: url("https://avatars2.githubusercontent.com/u/57320683?s=460&v=4");
-            background-repeat: repeat;
-            background-position: 50% 50%;
-            transition: all .2s;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            flex-wrap: wrap
         }
-        @media only screen and (max-width: 600px) {
-            main{
-                text-align: center;
-            }
+        footer a{
+            margin-left: 30px;
+        }
+        footer span{
+            color: #fff;
+            margin-right: auto;
         }
     </style>
 </head>
 <body>
     <main>
-        <h2>Hello World!</h2>
-        <p>I'm JayPY and i'm a web developer!</p>
-        <br>
-        <a href="mailto:jaypy.code@gmail.com">Email</a>
-        <a href="https://github.com/jaypy-code">GitHub</a>
-        <a href="https://instagram.com/jaypy.code">Instagram</a>
+        <img src="https://avatars2.githubusercontent.com/u/57320683?s=460&v=4" alt="JayPY Code - Logo">
+        <h2>JayPY Code</h2>
+        <p>Hi, I am JayPY and i'm a web developer!</p>
+        <br><br>
+        <ul id="repos"></ul>
     </main>
-    <div class="background"></div>
+    <footer>
+        <span><script>document.write(new Date().getFullYear())</script></span>
+            <a href="mailto:jaypy.code@gmail.com">Email</a>
+            <a href="https://github.com/jaypy-code">GitHub</a>
+            <a href="https://instagram.com/jaypy.code">Instagram</a>
+    </footer>
     <script>
-        let background = document.querySelector('div.background'),
-            main = document.querySelector('main')
-            body = document.body;
-        
-        body.onmouseleave = ()=>{
-            background.style.display = 'none';
-        }
-
-        body.onmouseover = ()=>{
-            background.style.display = '';
-        }
-
-        body.onmousemove = (event)=>{
-            if(event.path.includes(main)) return;
-            let width = window.innerWidth,
-                height = window.innerHeight;
-
-            let x = (100 * event.x) / width,
-                y = (100 * event.y) / height;
-
-            let value = `${x}% ${y}%`;
-            
-            background.style.backgroundPosition = value;
-        }
+        window.onload = ()=>{
+            fetch("https://api.github.com/users/jaypy-code/repos")
+            .then(res=>{
+                return res.json();                
+            }).then(result=>{
+                let ul = document.getElementById('repos');
+                result.forEach(repo=>{
+                    ul.innerHTML += `<li><a href="${repo['html_url']}" title="${repo['description'] || ''}">${repo['name']}</a></li>`;
+                })
+            })
+        };
     </script>
 </body>
 </html>
